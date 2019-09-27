@@ -1,0 +1,5 @@
+package com.dwolla.cte
+
+sealed trait ShouldFailingTasksBeStopped
+case object StopFailingTasks extends ShouldFailingTasksBeStopped
+case object LeaveTasksRunning extends ShouldFailingTasksBeStopped

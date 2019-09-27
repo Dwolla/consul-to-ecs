@@ -11,6 +11,7 @@ lazy val buildSettings = Seq(
 
     Seq(
       "software.amazon.awssdk" % "ecs" % awsJavaSdkVersion,
+      "software.amazon.awssdk" % "ec2" % awsJavaSdkVersion,
       "org.typelevel" %% "cats-core" % "2.0.0",
       "org.typelevel" %% "cats-effect" % "2.0.0",
       "com.comcast" %% "ip4s-cats" % "1.3.0",
@@ -18,10 +19,8 @@ lazy val buildSettings = Seq(
       "io.getnelson.helm" %% "http4s" % "6.0.13",
       "org.scala-lang.modules" %% "scala-collection-compat" % "2.1.1",
       "com.chuusai" %% "shapeless" % "2.3.3",
-//      "org.scalatest" %% "scalatest" % "3.0.8" % Test,
-//      "com.dwolla" %% "testutils-scalatest-fs2" % "2.0.0-M3" % Test,
-//      "com.ironcorelabs" %% "cats-scalatest" % "3.0.0" % Test,
-//      "io.circe" %% "circe-literal" % circeVersion % Test,
+      "com.monovore" %% "decline" % "1.0.0",
+      "com.monovore" %% "decline-effect" % "1.0.0",
     )
   },
 )
