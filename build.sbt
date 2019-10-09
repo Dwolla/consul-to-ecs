@@ -21,6 +21,7 @@ lazy val buildSettings = Seq(
       "com.chuusai" %% "shapeless" % "2.3.3",
       "com.monovore" %% "decline" % "1.0.0",
       "com.monovore" %% "decline-effect" % "1.0.0",
+      "io.chrisdavenport" %% "log4cats-slf4j" % "1.0.0",
     )
   },
 )
