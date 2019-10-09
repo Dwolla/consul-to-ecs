@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.ec2.Ec2AsyncClient
 import software.amazon.awssdk.services.ec2.model._
 import software.amazon.awssdk.services.ecs.EcsAsyncClient
 import software.amazon.awssdk.services.ecs.model.{DescribeContainerInstancesRequest, DescribeTasksRequest, ListTasksRequest, ContainerInstance => AwsContainerInstance, Task => AwsTask}
+import _root_.io.chrisdavenport.log4cats.Logger
 
 package object ecs {
   type Cluster = String @@ ClusterTag
@@ -169,13 +170,14 @@ package ecs {
   case object IgnoreTasks extends EcsOp[Unit]
 
   object EcsOp {
-    def interpreter[F[_] : Sync : Parallel](ecsAlg: EcsAlg[F])(implicit ev: Stream.Compiler[F, F]): EcsOp ~> F = new (EcsOp ~> F) {
+    def interpreter[F[_] : Applicative : Parallel : Logger](ecsAlg: EcsAlg[F])(implicit ev: Stream.Compiler[F, F]): EcsOp ~> F = new (EcsOp ~> F) {
       override def apply[A](fa: EcsOp[A]): F[A] = fa match {
         case DescribeTasks(cluster, service) =>
           ecsAlg.describeTasks(cluster, service).compile.toList
         case StopTasks(tasks: List[Task]) =>
+// TODO enable tasks to actually be stopped if requested
 //          tasks.parTraverse_(ecsAlg.stopTask)
-          tasks.parTraverse_(task => Sync[F].delay(println(s"would stop $task, but this is a dry-run")))
+          tasks.parTraverse_(task => Logger[F].warn(s"would stop $task, but this is a dry-run"))
         case IgnoreTasks =>
           Applicative[F].unit
       }

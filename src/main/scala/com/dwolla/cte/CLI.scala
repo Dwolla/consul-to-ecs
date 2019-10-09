@@ -25,10 +25,10 @@ object MainApp {
   def apply[F[_] : ConcurrentEffect : Parallel : Logger]: Kleisli[F, CommandLineOptions, Unit] =
     optionsToTaskList[F] >>= logOutput[F]
 
-  private def optionsToTaskList[F[_] : ConcurrentEffect : Parallel]: Kleisli[F, CommandLineOptions, List[Task]] =
+  private def optionsToTaskList[F[_] : ConcurrentEffect : Parallel : Logger]: Kleisli[F, CommandLineOptions, List[Task]] =
     interpreterResource.tapWithMapF(_.use((runProgram[F] _).tupled))
 
-  private def interpreterResource[F[_] : ConcurrentEffect : Parallel]: Kleisli[Resource[F, *], CommandLineOptions, ConsulAndEcsAlgebra ~> F] =
+  private def interpreterResource[F[_] : ConcurrentEffect : Parallel : Logger]: Kleisli[Resource[F, *], CommandLineOptions, ConsulAndEcsAlgebra ~> F] =
     Kleisli { opts: CommandLineOptions =>
       for {
         blocker <- Blocker[F]
